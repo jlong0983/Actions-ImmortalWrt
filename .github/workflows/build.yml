@@ -69,7 +69,6 @@ jobs:
         with:
           name: config-before-build
           path: |
-            ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
@@ -123,7 +122,6 @@ jobs:
         with:
           name: config-before-build
           path: |
-            ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
