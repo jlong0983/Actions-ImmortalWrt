@@ -45,7 +45,7 @@ jobs:
           sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
           sudo mkdir -p /mnt/build_wrt
           sudo chown $USER:$USER /mnt/build_wrt
-          sudo ln -s /mnt/build_wrt $GITHUB_WORKSPACE/
+          sudo ln -s /mnt/build_wrt $GITHUB_WORKSPACE
 
       - name: 克隆当前仓库 (Clone current repo)
         uses: actions/checkout@v4
