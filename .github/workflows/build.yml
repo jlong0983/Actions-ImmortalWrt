@@ -34,7 +34,6 @@ jobs:
     name: 🚀 编译 (Build)
     steps:
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
-        working-directory: /mnt
         run: |
           sudo apt update -y
           sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
@@ -42,52 +41,56 @@ jobs:
 
       - name: 克隆当前仓库 (Clone current repo)
         uses: actions/checkout@v4
+        with:
+          path: /mnt
 
       - name: 克隆 ImmortalWrt 仓库 (Clone ImmortalWrt repo)
         uses: actions/checkout@v4
         with:
           repository: '${{inputs.owner}}/${{inputs.repo}}'
           ref: ${{inputs.branch}}
-          path: ImmortalWrt
+          path: /mnt/ImmortalWrt
 
       - name: 复制当前仓库的配置文件到 ImmortalWrt 仓库  (Copy current repo config to ImmortalWrt repo)
-        run: cp -f .config diy.sh ImmortalWrt/
+        working-directory: /mnt
+        run: cp -f .config diy.sh /mnt/ImmortalWrt/
 
       - name: 运行 diy.sh (Run diy.sh)
-        working-directory: ImmortalWrt
+        working-directory: /mnt/ImmortalWrt
         run: |
           chmod +x diy.sh
           ./diy.sh
 
       - name: 更新并下载 feeds (Update and download feeds)
-        working-directory: ImmortalWrt
+        working-directory: /mnt/ImmortalWrt
         run: ./scripts/feeds update -a && ./scripts/feeds install -a
 
       - name: 再次复制当前仓库的配置文件到 ImmortalWrt 仓库 (Copy current repo config to ImmortalWrt repo again)
-        run: cp -f .config diy.sh ImmortalWrt/
+        working-directory: /mnt
+        run: cp -f .config diy.sh /mnt/ImmortalWrt/
 
       - name: 编译前上传配置 (Upload config before build)
         uses: actions/upload-artifact@v4
         with:
           name: config-before-build
           path: |
-            ImmortalWrt/.config
+            /mnt/ImmortalWrt/.config
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
-        working-directory: ImmortalWrt
+        working-directory: /mnt/ImmortalWrt
         run: make -j$(nproc) V=s
 
       - name: 单线程编译 ImmortalWrt (Build ImmortalWrt single thread)
         if: ${{inputs.multithreading == false}}
-        working-directory: ImmortalWrt
+        working-directory: /mnt/ImmortalWrt
         run: make -j1 V=s
 
       - name: 上传编译结果到 Artifact (Upload build result to Artifact)
         uses: actions/upload-artifact@v4
         with:
           name: ImmortalWrt-build-result
-          path: ImmortalWrt/bin/targets
+          path: /mnt/ImmortalWrt/bin/targets
 
   build-ssh:
     if: ${{inputs.ssh == true}}
