@@ -36,7 +36,6 @@ jobs:
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
         run: |
           sudo apt update -y
-          sudo apt full-upgrade -y
           sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
 
       - name: 克隆当前仓库 (Clone current repo)
