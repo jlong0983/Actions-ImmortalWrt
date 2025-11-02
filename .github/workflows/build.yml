@@ -33,17 +33,16 @@ jobs:
     name: 🚀 编译 (Build)
     steps:
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
+        working-directory: /mnt
         run: |
           sudo apt update -y
           sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
           sudo chmod 777 /mnt
 
       - name: 克隆当前仓库 (Clone current repo)
-        working-directory: /mnt
         uses: actions/checkout@v4
 
       - name: 克隆 ImmortalWrt 仓库 (Clone ImmortalWrt repo)
-        working-directory: /mnt
         uses: actions/checkout@v4
         with:
           repository: '${{inputs.owner}}/${{inputs.repo}}'
