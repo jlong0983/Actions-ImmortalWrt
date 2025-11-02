@@ -52,6 +52,7 @@ jobs:
           sudo apt autoremove --purge
           sudo apt autoclean
           sudo apt clean
+          sudo apt install ncurses
           sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
 
       - name: 克隆当前仓库 (Clone current repo)
@@ -84,8 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: config-before-build
-          path: |
-            ImmortalWrt/.config
+          path: ImmortalWrt/.config
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
